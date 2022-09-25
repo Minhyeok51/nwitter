@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 const Home = ({userObj}) => {
     // console.log(userObj)
-    const [nweet,setNweet] = useState("");
+    const [nweet,setNweet] = useState("");  //폼을 위한 state
     const [nweets,setNweets] = useState([]);
     
     useEffect(()=>{
