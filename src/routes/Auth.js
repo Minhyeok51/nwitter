@@ -1,81 +1,42 @@
+import AuthForm from "components/AuthForm";
 import { authService, firebaseInstance } from "fbase";
-import React, { useState } from "react";
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTwitter,
+  faGoogle,
+  faGithub,
+} from "@fortawesome/free-brands-svg-icons";
 
 const Auth = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [newAccount, setNewAccount] = useState(true);
-  const [error, setError] = useState("")
-  const onChange = (event) => {
-    // console.log(event.target.name);
-    const{
-        target:{name,value},
-    } = event;
-    console.log(name)
-    console.log(value)
-    if(name === "email"){
-        setEmail(value)
-    } else if(name ==="password"){
-        setPassword(value);
-    }
-  };
-  const onSubmit = async(event) => {
-    event.preventDefault();
-    try{
-      let data
-      if (newAccount){
-        // creat account
-        data = await authService.createUserWithEmailAndPassword(email, password)
-      }else{
-        // login
-        data = await authService.signInWithEmailAndPassword(email, password)
-      }
-      console.log(data)
-    } catch(error){
-      setError(error.message)
-    }
-    
-  };
-  const toggleAccount = () =>setNewAccount((prev)=>!prev)
-  const onSocialClick = async (event)=>{
-    const{
-      target:{name},
+  const onSocialClick = async (event) => {
+    const {
+      target: { name },
     } = event;
     let provider;
-    if(name === "google"){
+    if (name === "google") {
       provider = new firebaseInstance.auth.GoogleAuthProvider();
-    }else if(name === "github"){
-      provider = new firebaseInstance.auth.GithubAuthProvider
+    } else if (name === "github") {
+      provider = new firebaseInstance.auth.GithubAuthProvider();
     }
-    const data = await authService.signInWithPopup(provider)
-    console.log(data)
-  }
+    await authService.signInWithPopup(provider);
+  };
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          required
-          value={email}
-          onChange={onChange}
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          required
-          value={password}
-          onChange={onChange}
-        />
-        <input type="submit" value={newAccount ? "Create Account" : "Sign in"} />
-      </form>
-      {error}
-      <span onClick={toggleAccount}>{newAccount? "Sign in": "Create Account"}</span>
-      <div>
-        <button name="google" onClick={onSocialClick}>Continue with Google</button>
-        <button name="github" onClick={onSocialClick}>Continue with Github</button>
+    <div className="authContainer">
+      <FontAwesomeIcon
+        icon={faTwitter}
+        color={"#04AAFF"}
+        size="3x"
+        style={{ marginBottom: 30 }}
+      />
+      <AuthForm />
+      <div className="authBtns">
+        <button name="google" onClick={onSocialClick} className="authBtn">
+          Continue with Google<FontAwesomeIcon icon={faGoogle} />
+        </button>
+        <button name="github" onClick={onSocialClick}className="authBtn">
+          Continue with Github<FontAwesomeIcon icon={faGithub} />
+        </button>
       </div>
     </div>
   );
